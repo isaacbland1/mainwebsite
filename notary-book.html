@@ -3,26 +3,44 @@
 <title>Book Notary — Heartbound Journeys</title>
 <style>
   body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f7f7fb;color:#111}
-  .wrap{max-width:820px;margin:0 auto;padding:1rem}
+  .wrap{max-width:900px;margin:0 auto;padding:1rem}
   .card{background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:1rem;margin:1rem 0}
   label{display:block;margin:.5rem 0 .25rem}
   input,select,textarea{width:100%;padding:.65rem;border:1px solid #ccc;border-radius:10px}
   .row{display:grid;gap:.75rem;grid-template-columns:1fr}
-  @media(min-width:700px){.row{grid-template-columns:1fr 1fr}}
+  @media(min-width:800px){.row{grid-template-columns:1fr 1fr}}
   .btn{display:inline-block;background:#1a73e8;color:#fff;padding:.75rem 1rem;border-radius:10px;text-decoration:none;font-weight:600;border:0;cursor:pointer}
-  .muted{color:#555;font-size:.9rem}
-  .ok{color:#0a8;font-weight:700}
-  .err{color:#c00;font-weight:700}
+  .muted{color:#555;font-size:.92rem}
+  .important{background:#fff3cd;border-left:4px solid #856404;padding:1rem;border-radius:8px}
+  .est{background:#f0f6ff;border-left:4px solid #1a73e8;padding:0.75rem;border-radius:8px}
+  table.quote{width:100%;border-collapse:collapse;margin:.5rem 0}
+  table.quote td{padding:.4rem .3rem;border-bottom:1px dashed #ddd}
+  table.quote td:last-child{text-align:right}
 </style>
 </head><body>
   <div class="wrap">
     <p><a href="notary.html">← Back to Notary</a></p>
     <h1>Book a Notary Appointment</h1>
-    <p class="muted">We’ll email a confirmation and add it to our calendar.</p>
+
+    <div class="card important">
+      <p><strong>Important:</strong> We are <em>not</em> a loan signing agent and do <em>not</em> perform real-estate transactions.</p>
+      <p>Pricing: <strong>$35 per notarization (stamp)</strong>. Travel uses the same mileage model as rides (home base → signing location). Optional printing: <strong>$5 first page</strong> + <strong>$3 each additional</strong>. Minimum total charge: <strong>$35</strong>.</p>
+    </div>
+
+    <p class="muted">Estimator uses Google Maps (traffic-aware) from home base <em>550 Harding Place, Nashville, TN 37211</em> → signing location.</p>
 
     <div class="card">
-      <form id="notaryForm" action="https://script.google.com/macros/s/AKfycbwiNlrSgfM7CLQ7HCo3VQiak75aF8Mkt7yK_ShHxbxUao_EBEpICu1NFXa4pkCGggnCbQ/exec" method="post" target="_self" action="https://script.google.com/macros/s/AKfycbwiNlrSgfM7CLQ7HCo3VQiak75aF8Mkt7yK_ShHxbxUao_EBEpICu1NFXa4pkCGggnCbQ/exec"method="post">
+      <form id="notaryForm" method="post" action="https://script.google.com/macros/s/AKfycbwiNlrSgfM7CLQ7HCo3VQiak75aF8Mkt7yK_ShHxbxUao_EBEpICu1NFXa4pkCGggnCbQ/exec" target="_self">
         <input type="hidden" name="service" value="notary">
+        <input type="hidden" name="redirect" value="https://isaacbland1.github.io/mainwebsite/thanks.html">
+
+        <!-- quote fields populated by estimator -->
+        <input type="hidden" id="quoteMiles"        name="quoteMiles">
+        <input type="hidden" id="quoteTimeMinutes"  name="quoteTimeMinutes">
+        <input type="hidden" id="quoteMultiplier"   name="quoteMultiplier">
+        <input type="hidden" id="quoteSurchargeFlat" name="quoteSurchargeFlat">
+        <input type="hidden" id="quoteTotalUSD"     name="quoteTotalUSD">
+
         <div class="row">
           <div>
             <label for="name">Full Name</label>
@@ -50,22 +68,146 @@
           </div>
           <div>
             <label for="duration">Duration (minutes)</label>
-            <input required type="number" id="duration" name="duration" value="30" min="15" step="15">
+            <input required type="number" id="duration" name="duration" value="30" min="5" step="5">
           </div>
         </div>
-        <div>
-          <label for="location">Signing Location</label>
-          <input required id="location" name="location" placeholder="Address or meeting place">
+        <div class="row">
+          <div>
+            <label for="location">Signing Location Address</label>
+            <input required id="location" name="location" placeholder="Start typing address…">
+          </div>
+          <div>
+            <label for="stamps"># of Notarizations (stamps)</label>
+            <input required type="number" id="stamps" name="stamps" min="1" value="1">
+          </div>
         </div>
+        <div class="row">
+          <div>
+            <label for="printPages">Pages to Print (optional)</label>
+            <input type="number" id="printPages" name="printPages" min="0" value="0">
+            <p class="muted">Printing: $5 first page + $3 each additional.</p>
+          </div>
+          <div>
+            <label for="paymentMethod">Preferred Payment Method (on-site)</label>
+            <select required id="paymentMethod" name="paymentMethod">
+              <option value="">Choose…</option>
+              <option>Cash</option><option>Debit/Credit</option><option>PayPal</option>
+              <option>Cash App</option><option>Venmo</option><option>Zelle</option>
+              <option>Apple Pay</option><option>Google Pay</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card est">
+          <div><strong>Estimate</strong></div>
+          <div>Distance: <span id="estDistance">—</span> · Time: <span id="estTime">—</span> · Total: <span id="estTotal">$—</span></div>
+          <table class="quote" id="breakdown" aria-label="Fare breakdown"></table>
+          <p class="muted">Calculated from home base (550 Harding Place) → signing location. Travel uses peak/after-hours surcharges (see estimate breakdown).</p>
+          <p><button type="button" class="btn" id="btnEstimate">Update Estimate</button></p>
+        </div>
+
         <div>
           <label for="notes">Document Type / Notes</label>
-          <textarea id="notes" name="notes" rows="4" placeholder="ID details, witnesses needed, etc."></textarea>
+          <textarea id="notes" name="notes" rows="4" placeholder="Bring valid photo ID; witnesses if required."></textarea>
         </div>
-        <p><button class="btn" type="submit">Request Booking</button></p>
-        <input type="hidden" name="redirect" value="https://isaacbland1.github.io/mainwebsite/thanks.html">
+
+        <p><button class="btn" type="submit">Request Notary</button></p>
       </form>
     </div>
   </div>
 
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
+<script>
+const HOME = "550 Harding Place, Nashville, TN 37211";
+const RATE_PER_MILE = 1.75;
+const MIN_CHARGE = 35.00;
+const STAMP = 35.00;
+const PRINT_FIRST = 5.00;
+const PRINT_ADDL  = 3.00;
 
+// Peak windows (Mon=1..Sun=7)
+const PEAK_WINDOWS = [
+  { days:[1,2,3,4,5], start:"07:00", end:"09:00", multiplier:1.15, flat:0 },
+  { days:[1,2,3,4,5], start:"16:00", end:"19:00", multiplier:1.15, flat:0 }
+];
+// After-hours (wraps midnight)
+const AFTER_HOURS = { start:"22:00", end:"06:00", multiplier:1.25, flat:10.00 };
+
+let directionsService;
+function initMaps(){
+  try{
+    directionsService = new google.maps.DirectionsService();
+    new google.maps.places.Autocomplete(document.getElementById('location'), { types: ['geocode'] });
+  }catch(e){}
+}
+window.addEventListener('load', initMaps);
+
+function dayNum(d){ return ((d.getDay()+6)%7)+1 } // Mon=1..Sun=7
+function hhmm(d){ return d.toTimeString().slice(0,5) }
+function inWindow(d,s,e){ const t=hhmm(d); return (s<=e)? (t>=s&&t<e) : (t>=s||t<e) }
+function getSurcharges(d){
+  let mult=1,flat=0; const dn=dayNum(d);
+  for(const w of PEAK_WINDOWS){ if(w.days.includes(dn) && inWindow(d,w.start,w.end)) mult*=w.multiplier; }
+  if(inWindow(d,AFTER_HOURS.start,AFTER_HOURS.end)){ mult*=AFTER_HOURS.multiplier; flat+=AFTER_HOURS.flat; }
+  return {multiplier:mult, flat:flat};
+}
+
+function routeDistance(origin, destination){
+  return new Promise((resolve)=>{
+    directionsService.route({
+      origin, destination, travelMode: 'DRIVING',
+      drivingOptions: { departureTime: new Date(), trafficModel: 'bestguess' }
+    }, (res, status)=>{
+      if(status === 'OK' && res.routes[0]){
+        const leg = res.routes[0].legs[0];
+        resolve({ miles: leg.distance.value/1609.344, minutes: (leg.duration_in_traffic?leg.duration_in_traffic.value:leg.duration.value)/60 });
+      } else resolve(null);
+    });
+  });
+}
+
+async function updateEstimate(){
+  const loc = document.getElementById('location').value.trim();
+  if(!loc){ alert('Enter the signing location.'); return; }
+  const a = await routeDistance(HOME, loc);
+  if(!a){ alert('Could not get a route.'); return; }
+
+  const dStr = document.getElementById('date').value;
+  const tStr = document.getElementById('time').value;
+  if(!dStr || !tStr){ alert('Pick a date and time.'); return; }
+  const when = new Date(dStr + "T" + tStr + ":00");
+
+  const miles = a.miles;
+  const minutes = a.minutes;
+  const stamps = parseInt(document.getElementById('stamps').value||'1',10);
+  const pages  = parseInt(document.getElementById('printPages').value||'0',10);
+
+  const surge = getSurcharges(when);
+  const travel = Math.max(MIN_CHARGE, miles*RATE_PER_MILE*surge.multiplier + surge.flat);
+  const printCost = pages>0 ? (PRINT_FIRST + Math.max(0,pages-1)*PRINT_ADDL) : 0;
+  const total = travel + stamps*STAMP + printCost;
+
+  // UI
+  document.getElementById('estDistance').textContent = miles.toFixed(1)+' mi';
+  document.getElementById('estTime').textContent     = Math.round(minutes)+' min';
+  document.getElementById('estTotal').textContent    = '$'+total.toFixed(2);
+  const rows = [
+    ['Travel ('+miles.toFixed(1)+' mi × $'+RATE_PER_MILE.toFixed(2)+'/mi)', '$'+(miles*RATE_PER_MILE).toFixed(2)],
+    [(surge.multiplier>1?'Peak/after-hours × '+surge.multiplier.toFixed(2):'Peak/after-hours'), surge.multiplier>1? '×'+surge.multiplier.toFixed(2): '—'],
+    [(surge.flat>0?'Surcharge (flat)':'Surcharge (flat)'), surge.flat>0? '$'+surge.flat.toFixed(2): '—'],
+    ['Stamps ($35 × '+stamps+')', '$'+(stamps*STAMP).toFixed(2)],
+    ['Printing', (printCost>0?'$'+printCost.toFixed(2):'—')],
+    ['Estimated total (min $'+MIN_CHARGE.toFixed(0)+')', '$'+total.toFixed(2)]
+  ];
+  document.getElementById('breakdown').innerHTML = rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('');
+
+  // Hidden fields -> server
+  document.getElementById('quoteMiles').value        = miles.toFixed(2);
+  document.getElementById('quoteTimeMinutes').value  = Math.round(minutes);
+  document.getElementById('quoteMultiplier').value   = surge.multiplier.toFixed(2);
+  document.getElementById('quoteSurchargeFlat').value= surge.flat.toFixed(2);
+  document.getElementById('quoteTotalUSD').value     = total.toFixed(2);
+}
+document.getElementById('btnEstimate').addEventListener('click', updateEstimate);
+</script>
 </body></html>
