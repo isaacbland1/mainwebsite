@@ -65,12 +65,85 @@
           <label for="notes">Notes</label>
           <textarea id="notes" name="notes" rows="4" placeholder="Flight number, special requests, etc."></textarea>
         </div>
-        <p><button class="btn" type="submit">Request Booking</button></p>
+        <p><button id="submitBtn" class="btn disabled" type="submit" disabled>Request Booking</button></p>
         <input type="hidden" name="redirect" value="https://isaacbland1.github.io/mainwebsite/thanks.html">
-      </form>
+      <div id="paypal-button-container"></div>
+<div class="muted" id="paypalStatus">Loading PayPal…</div>
+</form>
     </div>
   </div>
 
 
-<script src="https://www.paypal.com/sdk/js?client-id=ATSqeyfRSl5alX1vcCijb2s7AruJT1dIQbL0DWkNJMhV7P3KysXhMWYSWkCy3byrbh4TE5fMlC_vNneS&currency=USD&components=buttons"></script>
+
+
+<script>
+(function() {
+  var CLIENT_ID = 'ATSqeyfRSl5alX1vcCijb2s7AruJT1dIQbL0DWkNJMhV7P3KysXhMWYSWkCy3byrbh4TE5fMlC_vNneS';
+  var STATUS = document.getElementById('paypalStatus');
+  function setStatus(msg) { if(STATUS) STATUS.textContent = msg; }
+
+  function renderButtons() {
+    if (!(window.paypal && paypal.Buttons)) { return false; }
+    var REQUEST_FEE = 15.00;
+    paypal.Buttons({
+      createOrder: function(data, actions) {
+        return actions.order.create({ purchase_units: [{ amount: { value: REQUEST_FEE.toFixed(2) } }] });
+      },
+      onApprove: async function(data, actions) {
+        try {
+          var details = await actions.order.capture();
+          var form = document.getElementById('rideForm');
+          if (form && details && details.id) {
+            var hid = document.getElementById('paypalOrderId');
+            if (!hid) {
+              hid = document.createElement('input');
+              hid.type = 'hidden';
+              hid.name = 'paypalOrderId';
+              hid.id = 'paypalOrderId';
+              form.appendChild(hid);
+            }
+            hid.value = details.id;
+            var btn = document.getElementById('submitBtn');
+            if (btn) { btn.classList.remove('disabled'); btn.removeAttribute('disabled'); }
+            setStatus('Request fee paid. You can submit your booking.');
+          }
+        } catch(e) {
+          setStatus('PayPal error after approval. Please try again or call.');
+        }
+      },
+      onError: function(err) {
+        setStatus('PayPal error loading. Try a different browser or disable blockers.');
+      }
+    }).render('#paypal-button-container');
+    return true;
+  }
+
+  function loadSDK() {
+    // Avoid duplicate loads
+    if (document.getElementById('paypal-sdk')) {
+      if (!renderButtons()) setTimeout(renderButtons, 300);
+      return;
+    }
+    var s = document.createElement('script');
+    s.id = 'paypal-sdk';
+    s.src = 'https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(CLIENT_ID) + '&currency=USD&components=buttons';
+    s.onload = function() {
+      setStatus(''); 
+      if (!renderButtons()) setTimeout(renderButtons, 300);
+    };
+    s.onerror = function() {
+      setStatus('Could not load PayPal. Check Client ID and blockers.');
+    };
+    document.body.appendChild(s);
+  }
+
+  // Kick off
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    loadSDK();
+  } else {
+    document.addEventListener('DOMContentLoaded', loadSDK);
+  }
+})();
+</script>
+
 </body></html>
