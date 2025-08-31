@@ -21,7 +21,7 @@
     <p class="muted">We’ll email a confirmation and add it to our calendar.</p>
 
     <div class="card">
-      <form id="rideForm" method="post" action="https://script.google.com/macros/s/AKfycbwiNlrSgfM7CLQ7HCo3VQiak75aF8Mkt7yK_ShHxbxUao_EBEpICu1NFXa4pkCGggnCbQ/exec">
+      <form id="rideForm"  action="https://script.google.com/macros/s/AKfycbwiNlrSgfM7CLQ7HCo3VQiak75aF8Mkt7yK_ShHxbxUao_EBEpICu1NFXa4pkCGggnCbQ/exec"method="post">
         <input type="hidden" name="service" value="rides">
         <div class="row">
           <div>
@@ -72,25 +72,5 @@
     </div>
   </div>
 
-<script>
-// Enhance UX: AJAX submit to stay on page
-document.getElementById('rideForm').addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const form = e.target;
-  const status = document.getElementById('status');
-  status.textContent = 'Submitting...';
-  try{
-    const fd = new FormData(form);
-    const res = await fetch(form.action, { method:'POST', body: fd });
-    const ok = res.ok;
-    const text = await res.text();
-    status.innerHTML = ok ? '<span class="ok">Request received. Check your email for confirmation.</span>' 
-                          : '<span class="err">Submission failed. Please try again or call (256) 345-5124.</span>';
-    if(ok) form.reset();
-    console.log(text);
-  }catch(err){
-    status.innerHTML = '<span class="err">Network error. Please try again or call.</span>';
-  }
-});
-</script>
+
 </body></html>
