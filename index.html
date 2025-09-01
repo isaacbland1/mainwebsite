@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0f172a;--card:#0b1225;--text:#e5e7eb;--muted:#9ca3af;--brand:#60a5fa;--accent:#34d399}
+:root{--bg:#0f172a;--card:#0b1225;--text:#e5e7eb;--muted:#9ca3af;--brand:#60a5fa;--accent:#34d399;--line:#1f2a4a}
 *{box-sizing:border-box}html,body{margin:0;height:100%}body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#0b1020,#0f172a);color:var(--text)}
 a{color:var(--brand);text-decoration:none}a:hover{opacity:.9}
 .nav{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 20px}
@@ -17,7 +17,7 @@ a{color:var(--brand);text-decoration:none}a:hover{opacity:.9}
 .btn{display:inline-block;background:var(--brand);color:#111;font-weight:700;padding:12px 16px;border-radius:12px}
 .btn.alt{background:#1f2937;color:#e5e7eb;border:1px solid #334155}
 .hero{max-width:1080px;margin:28px auto;display:grid;gap:24px;grid-template-columns:1.2fr .8fr;padding:0 20px}
-.card{background:rgba(11,18,37,.66);border:1px solid #1f2a4a;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.25);padding:20px}
+.card{background:rgba(11,18,37,.66);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.25);padding:20px}
 h1{font-size: clamp(28px,4vw,40px);margin:8px 0 6px}
 h2{font-size:20px;margin:0 0 12px}
 p{margin:8px 0 14px;color:var(--muted)}
@@ -30,6 +30,13 @@ p{margin:8px 0 14px;color:var(--muted)}
 .notice{font-size:14px;background:#122042;border:1px dashed #27407e;border-radius:12px;padding:10px;color:#c7d2fe}
 .phone{font-weight:700;color:#fff}
 .small{font-size:12px;color:#9aa5bd}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:10px;border-bottom:1px solid var(--line);text-align:left}
+.table th{color:#cbd5e1}
+.faq dt{font-weight:700;margin-top:10px}
+.faq dd{margin:6px 0 12px;color:var(--muted)}
+.section{max-width:1080px;margin:18px auto 0;padding:0 20px;display:grid;gap:18px;grid-template-columns:1fr 1fr}
+@media (max-width:900px){.section{grid-template-columns:1fr}}
 </style>
 <script type="application/ld+json">
 {
@@ -102,6 +109,40 @@ p{margin:8px 0 14px;color:var(--muted)}
       </div>
     </aside>
   </main>
+
+  <section class="section">
+    <div class="card">
+      <h2>Compare costs in Nashville</h2>
+      <table class="table">
+        <tr><th>Service</th><th>Typical Cost</th><th>Notes</th></tr>
+        <tr><td>Isaac’s Services</td><td>$35 min + $1.50/mi</td><td>Transparent estimate before booking; professional, insured driver</td></tr>
+        <tr><td>Airport taxi</td><td>~$30 flat + $2 per extra passenger</td><td>May add surcharges; pricing varies by zone</td></tr>
+        <tr><td>Shared shuttle</td><td>$35–$65</td><td>Price varies by group size and timing</td></tr>
+        <tr><td>Black car/premium</td><td>$65+</td><td>Premium tier pricing</td></tr>
+      </table>
+      <p style="margin-top:10px">Result: most trips come out <strong>20–40% less</strong> than premium options while keeping a professional experience.</p>
+    </div>
+
+    <div class="card">
+      <h2>FAQ</h2>
+      <dl class="faq">
+        <dt>Do I have to pay the $15 request fee?</dt>
+        <dd>Yes. It secures your timeslot and is applied to your total. It’s processed via PayPal under Bland Corp.</dd>
+
+        <dt>How do you calculate ride costs?</dt>
+        <dd>We estimate miles and time in real-time from 550 Harding Pl using our local routing engine. Final total respects the $35 minimum + $1.50/mi.</dd>
+
+        <dt>What payments do you accept?</dt>
+        <dd>Cash, card, PayPal, and popular payment apps. The request fee is paid online via PayPal.</dd>
+
+        <dt>Do you handle notary real estate signings?</dt>
+        <dd>No. We are not a real-estate signing agent. General notary work only.</dd>
+
+        <dt>Can you help plan first-time long-distance meetups?</dt>
+        <dd>Yes. That’s our Heartbound Journeys specialty—rides, hotel transfers, and reservations at romantic Nashville spots. Optional photo/video add-ons are available via local freelancers you pay directly.</dd>
+      </dl>
+    </div>
+  </section>
 
   <footer class="footer">
     <div>© <span id="y"></span> Isaac’s Services • A Bland Corp company • Nashville, TN • <a href="about.html">About</a> • <a href="rides.html">Rides</a> • <a href="notary.html">Notary</a> • <a href="heartbound.html">Heartbound Journeys</a></div>
