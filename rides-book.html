@@ -3,26 +3,47 @@
 <title>Book Car Ride — Heartbound Journeys</title>
 <style>
   body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f7f7fb;color:#111}
-  .wrap{max-width:820px;margin:0 auto;padding:1rem}
+  .wrap{max-width:960px;margin:0 auto;padding:1rem}
   .card{background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:1rem;margin:1rem 0}
   label{display:block;margin:.5rem 0 .25rem}
   input,select,textarea{width:100%;padding:.65rem;border:1px solid #ccc;border-radius:10px}
   .row{display:grid;gap:.75rem;grid-template-columns:1fr}
-  @media(min-width:700px){.row{grid-template-columns:1fr 1fr}}
+  @media(min-width:880px){.row{grid-template-columns:1fr 1fr}}
   .btn{display:inline-block;background:#1a73e8;color:#fff;padding:.75rem 1rem;border-radius:10px;text-decoration:none;font-weight:600;border:0;cursor:pointer}
-  .muted{color:#555;font-size:.9rem}
-  .ok{color:#0a8;font-weight:700}
-  .err{color:#c00;font-weight:700}
+  .muted{color:#555;font-size:.92rem}
+  .important{background:#fff3cd;border-left:4px solid #856404;padding:1rem;border-radius:8px}
+  .est{background:#f0f6ff;border-left:4px solid #1a73e8;padding:0.75rem;border-radius:8px}
+  .grid-3{display:grid;gap:.75rem;grid-template-columns:1fr}
+  @media(min-width:960px){.grid-3{grid-template-columns:repeat(3,1fr)}}
+  table.quote{width:100%;border-collapse:collapse;margin:.5rem 0}
+  table.quote td{padding:.4rem .3rem;border-bottom:1px dashed #ddd}
+  table.quote td:last-child{text-align:right}
+  .disabled{opacity:.6;pointer-events:none}
 </style>
 </head><body>
   <div class="wrap">
     <p><a href="rides.html">← Back to Rides</a></p>
     <h1>Book a Car Ride</h1>
-    <p class="muted">We’ll email a confirmation and add it to our calendar.</p>
+
+    <div class="card important">
+      <p><strong>Important:</strong> A non-refundable <strong>$15 request fee</strong> is required to secure your booking. This fee must be paid by PayPal <em>before</em> you can submit the request. The fee is applied toward your total fare.</p>
+    </div>
+
+    <p class="muted">Estimator uses Google Maps (traffic-aware) from home base <em>550 Harding Place, Nashville, TN 37211</em> → pickup → destination. Minimum charge: <strong>$35</strong>.</p>
 
     <div class="card">
-      <form id="rideForm" action="https://script.google.com/macros/s/AKfycbwiNlrSgfM7CLQ7HCo3VQiak75aF8Mkt7yK_ShHxbxUao_EBEpICu1NFXa4pkCGggnCbQ/exec" method="post" target="_self" action="https://script.google.com/macros/s/AKfycbwiNlrSgfM7CLQ7HCo3VQiak75aF8Mkt7yK_ShHxbxUao_EBEpICu1NFXa4pkCGggnCbQ/exec"method="post">
+      <form id="rideForm" method="post" action="https://script.google.com/macros/s/AKfycbwiNlrSgfM7CLQ7HCo3VQiak75aF8Mkt7yK_ShHxbxUao_EBEpICu1NFXa4pkCGggnCbQ/exec" target="_self">
         <input type="hidden" name="service" value="rides">
+        <input type="hidden" name="redirect" value="https://isaacbland1.github.io/mainwebsite/thanks.html">
+
+        <!-- quote fields populated by estimator -->
+        <input type="hidden" id="quoteMiles"        name="quoteMiles">
+        <input type="hidden" id="quoteTimeMinutes"  name="quoteTimeMinutes">
+        <input type="hidden" id="quoteMultiplier"   name="quoteMultiplier">
+        <input type="hidden" id="quoteSurchargeFlat" name="quoteSurchargeFlat">
+        <input type="hidden" id="quoteTotalUSD"     name="quoteTotalUSD">
+        <input type="hidden" id="paypalOrderId"     name="paypalOrderId">
+
         <div class="row">
           <div>
             <label for="name">Full Name</label>
@@ -50,101 +71,205 @@
           </div>
           <div>
             <label for="duration">Duration (minutes)</label>
-            <input required type="number" id="duration" name="duration" value="60" min="15" step="15">
+            <input required type="number" id="duration" name="duration" value="60" min="5" step="5">
           </div>
         </div>
-        <div>
-          <label for="pickup">Pickup Location</label>
-          <input required id="pickup" name="pickup">
+        <div class="row">
+          <div>
+            <label for="pickup">Pickup Address</label>
+            <input required id="pickup" name="pickup" placeholder="Start typing address…">
+          </div>
+          <div>
+            <label for="dropoff">Destination Address</label>
+            <input required id="dropoff" name="dropoff" placeholder="Start typing address…">
+          </div>
         </div>
-        <div>
-          <label for="dropoff">Drop-off Location</label>
-          <input required id="dropoff" name="dropoff">
+
+        <div class="card est">
+          <div class="grid-3">
+            <div><div><strong>Distance</strong></div><div id="estDistance">—</div></div>
+            <div><div><strong>Time (with traffic)</strong></div><div id="estTime">—</div></div>
+            <div><div><strong>Estimated Total</strong></div><div id="estTotal">$—</div></div>
+          </div>
+          <table class="quote" id="breakdown" aria-label="Fare breakdown"></table>
+          <p><button type="button" class="btn" id="btnEstimate">Update Estimate</button></p>
         </div>
+
+        <div class="row">
+          <div>
+            <label for="paymentMethod">Preferred Payment Method (for fare on the day)</label>
+            <select required id="paymentMethod" name="paymentMethod">
+              <option value="">Choose…</option>
+              <option>Cash</option><option>Debit/Credit</option><option>PayPal</option>
+              <option>Cash App</option><option>Venmo</option><option>Zelle</option>
+              <option>Apple Pay</option><option>Google Pay</option>
+            </select>
+          </div>
+          <div>
+            <label>Step 1: Pay $15 Request Fee (non-refundable)</label>
+            <div id="paypal-button-container"></div>
+            <div class="muted" id="paypalStatus">Please complete the request fee to enable booking.</div>
+          </div>
+        </div>
+
         <div>
           <label for="notes">Notes</label>
-          <textarea id="notes" name="notes" rows="4" placeholder="Flight number, special requests, etc."></textarea>
+          <textarea id="notes" name="notes" rows="4" placeholder="Flight number, gate, special requests, etc."></textarea>
         </div>
+
         <p><button id="submitBtn" class="btn disabled" type="submit" disabled>Request Booking</button></p>
-        <input type="hidden" name="redirect" value="https://isaacbland1.github.io/mainwebsite/thanks.html">
-      <div id="paypal-button-container"></div>
-<div class="muted" id="paypalStatus">Loading PayPal…</div>
-</form>
+      </form>
     </div>
   </div>
 
-
-
+<!-- Google Maps (replace YOUR_GOOGLE_MAPS_API_KEY) -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
+<!-- PayPal SDK (client id replaced later) -->
+<script id="paypal-sdk" src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD&components=buttons" data-sdk-integration-source="button-factory"></script>
 
 <script>
-(function() {
-  var CLIENT_ID = 'ATSqeyfRSl5alX1vcCijb2s7AruJT1dIQbL0DWkNJMhV7P3KysXhMWYSWkCy3byrbh4TE5fMlC_vNneS';
-  var STATUS = document.getElementById('paypalStatus');
-  function setStatus(msg) { if(STATUS) STATUS.textContent = msg; }
+const HOME = "550 Harding Place, Nashville, TN 37211";
 
-  function renderButtons() {
-    if (!(window.paypal && paypal.Buttons)) { return false; }
-    var REQUEST_FEE = 15.00;
+// === Pricing config (tweak anytime) ===
+const RATE_BASE_PER_MILE = 1.75;     // base per-mile (off-peak)
+const REQUEST_FEE = 15.00;           // paid up-front via PayPal
+const MIN_CHARGE = 35.00;            // minimum total
+const WAIT_FREE_MIN = 5;             // free wait
+const WAIT_RATE_PER_MIN = 0.50;      // after free minutes
+
+// Peak windows (Mon=1..Sun=7). Each applies a multiplier.
+const PEAK_WINDOWS = [
+  { days:[1,2,3,4,5], start:"07:00", end:"09:00", multiplier:1.15, flat:0 },
+  { days:[1,2,3,4,5], start:"16:00", end:"19:00", multiplier:1.15, flat:0 }
+];
+
+// After-hours window (wraps midnight). Adds multiplier + flat fee.
+const AFTER_HOURS = { start:"22:00", end:"06:00", multiplier:1.25, flat:10.00 };
+
+// ================== Maps helpers ==================
+let directionsService;
+function initMaps(){
+  try{
+    directionsService = new google.maps.DirectionsService();
+    new google.maps.places.Autocomplete(document.getElementById('pickup'),  { types:['geocode'] });
+    new google.maps.places.Autocomplete(document.getElementById('dropoff'), { types:['geocode'] });
+  }catch(e){}
+}
+window.addEventListener('load', initMaps);
+
+function hhmm(date){
+  return date.toTimeString().slice(0,5);
+}
+function inWindow(date, startHHMM, endHHMM){
+  const t = hhmm(date);
+  if(startHHMM <= endHHMM) return t >= startHHMM && t < endHHMM;
+  // wraps midnight
+  return (t >= startHHMM) || (t < endHHMM);
+}
+function dayNum(date){ return ((date.getDay()+6)%7)+1; } // Mon=1..Sun=7
+
+function getSurcharges(date){
+  const d = dayNum(date);
+  let mult = 1.0, flat = 0;
+  for(const w of PEAK_WINDOWS){
+    if(w.days.includes(d) && inWindow(date, w.start, w.end)){ mult *= w.multiplier; }
+  }
+  if(inWindow(date, AFTER_HOURS.start, AFTER_HOURS.end)){
+    mult *= AFTER_HOURS.multiplier; flat += AFTER_HOURS.flat;
+  }
+  return {multiplier:mult, flat:flat};
+}
+
+function route(origin, destination){
+  return new Promise((resolve)=>{
+    directionsService.route({
+      origin, destination, travelMode:'DRIVING',
+      drivingOptions:{ departureTime:new Date(), trafficModel:'bestguess' }
+    }, (res, status)=>{
+      if(status==='OK' && res.routes[0]){
+        const leg = res.routes[0].legs[0];
+        resolve({
+          miles:  leg.distance.value/1609.344,
+          minutes:(leg.duration_in_traffic?leg.duration_in_traffic.value:leg.duration.value)/60
+        });
+      } else resolve(null);
+    });
+  });
+}
+
+function fmtUSD(x){ return '$'+x.toFixed(2); }
+
+// ================== Estimator ==================
+async function updateEstimate(){
+  const pickup = document.getElementById('pickup').value.trim();
+  const drop   = document.getElementById('dropoff').value.trim();
+  if(!pickup || !drop){ alert('Enter pickup and destination.'); return; }
+
+  const dStr = document.getElementById('date').value;
+  const tStr = document.getElementById('time').value;
+  if(!dStr || !tStr){ alert('Pick a date and time.'); return; }
+  const [Y,M,D] = dStr.split('-').map(Number);
+  const [h,m]   = tStr.split(':').map(Number);
+  const when    = new Date(Y, M-1, D, h, m, 0, 0);
+
+  const a = await route(HOME, pickup);
+  const b = await route(pickup, drop);
+  if(!a || !b){ alert('Could not get a route from Google. Please check addresses.'); return; }
+
+  const miles   = a.miles + b.miles;
+  const minutes = a.minutes + b.minutes;
+
+  const surge   = getSurcharges(when);
+  const base    = miles * RATE_BASE_PER_MILE;
+  const wait    = 0; // we only charge wait on the day (beyond free minutes)
+  let total     = REQUEST_FEE + (base * surge.multiplier) + surge.flat + wait;
+  if(total < MIN_CHARGE) total = MIN_CHARGE;
+
+  // Fill UI
+  document.getElementById('estDistance').textContent = miles.toFixed(1)+' mi';
+  document.getElementById('estTime').textContent     = Math.round(minutes)+' min';
+  document.getElementById('estTotal').textContent    = fmtUSD(total);
+
+  // Fill breakdown
+  const rows = [
+    ['Request fee', fmtUSD(REQUEST_FEE)],
+    ['Distance ('+miles.toFixed(1)+' mi × $'+RATE_BASE_PER_MILE.toFixed(2)+'/mi)', fmtUSD(base)],
+    [ (surge.multiplier>1?'Peak/after-hours × '+surge.multiplier.toFixed(2):'Peak/after-hours'), surge.multiplier>1? '×'+surge.multiplier.toFixed(2): '—'],
+    [ (surge.flat>0?'Surcharge (flat)': 'Surcharge (flat)'), surge.flat>0? fmtUSD(surge.flat): '—'],
+    ['Estimated total (min $'+MIN_CHARGE.toFixed(0)+')', fmtUSD(total)]
+  ];
+  const tbl = document.getElementById('breakdown');
+  tbl.innerHTML = rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('');
+
+  // Hidden fields -> server
+  document.getElementById('quoteMiles').value        = miles.toFixed(2);
+  document.getElementById('quoteTimeMinutes').value  = Math.round(minutes);
+  document.getElementById('quoteMultiplier').value   = surge.multiplier.toFixed(2);
+  document.getElementById('quoteSurchargeFlat').value= surge.flat.toFixed(2);
+  document.getElementById('quoteTotalUSD').value     = total.toFixed(2);
+}
+document.getElementById('btnEstimate').addEventListener('click', updateEstimate);
+
+// ================== PayPal button ==================
+(function initPayPalButtons(){
+  function tryRender(){
+    if(!(window.paypal && paypal.Buttons)) { setTimeout(tryRender, 200); return; }
     paypal.Buttons({
-      createOrder: function(data, actions) {
-        return actions.order.create({ purchase_units: [{ amount: { value: REQUEST_FEE.toFixed(2) } }] });
+      createOrder:(data,actions)=>actions.order.create({ purchase_units:[{ amount:{ value: REQUEST_FEE.toFixed(2) } }] }),
+      onApprove: async (data,actions)=>{
+        try{
+          const details = await actions.order.capture();
+          const hid = document.getElementById('paypalOrderId');
+          if(hid) hid.value = details.id;
+          const btn = document.getElementById('submitBtn');
+          if(btn){ btn.classList.remove('disabled'); btn.removeAttribute('disabled'); }
+          const st = document.getElementById('paypalStatus'); if(st) st.textContent='Request fee paid. You can submit your booking.';
+        }catch(e){ const st = document.getElementById('paypalStatus'); if(st) st.textContent='PayPal error. Please try again.'; }
       },
-      onApprove: async function(data, actions) {
-        try {
-          var details = await actions.order.capture();
-          var form = document.getElementById('rideForm');
-          if (form && details && details.id) {
-            var hid = document.getElementById('paypalOrderId');
-            if (!hid) {
-              hid = document.createElement('input');
-              hid.type = 'hidden';
-              hid.name = 'paypalOrderId';
-              hid.id = 'paypalOrderId';
-              form.appendChild(hid);
-            }
-            hid.value = details.id;
-            var btn = document.getElementById('submitBtn');
-            if (btn) { btn.classList.remove('disabled'); btn.removeAttribute('disabled'); }
-            setStatus('Request fee paid. You can submit your booking.');
-          }
-        } catch(e) {
-          setStatus('PayPal error after approval. Please try again or call.');
-        }
-      },
-      onError: function(err) {
-        setStatus('PayPal error loading. Try a different browser or disable blockers.');
-      }
+      onError:(err)=>{ const st = document.getElementById('paypalStatus'); if(st) st.textContent='PayPal error. Try a different browser or disable blockers.'; }
     }).render('#paypal-button-container');
-    return true;
   }
-
-  function loadSDK() {
-    // Avoid duplicate loads
-    if (document.getElementById('paypal-sdk')) {
-      if (!renderButtons()) setTimeout(renderButtons, 300);
-      return;
-    }
-    var s = document.createElement('script');
-    s.id = 'paypal-sdk';
-    s.src = 'https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(CLIENT_ID) + '&currency=USD&components=buttons';
-    s.onload = function() {
-      setStatus(''); 
-      if (!renderButtons()) setTimeout(renderButtons, 300);
-    };
-    s.onerror = function() {
-      setStatus('Could not load PayPal. Check Client ID and blockers.');
-    };
-    document.body.appendChild(s);
-  }
-
-  // Kick off
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    loadSDK();
-  } else {
-    document.addEventListener('DOMContentLoaded', loadSDK);
-  }
+  tryRender();
 })();
 </script>
-
-<script>const ROUTE_PROXY="http://10.0.0.237:3000";</script>
 </body></html>
