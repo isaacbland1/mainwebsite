@@ -1,47 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Heartbound Journeys — Services Hub</title>
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f7f7fb;color:#111}
-    .wrap{max-width:980px;margin:0 auto;padding:1rem}
-    .card{background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:1rem;margin:1rem 0}
-    a.button{display:inline-block;background:#1a73e8;color:#fff;padding:.75rem 1rem;border-radius:10px;text-decoration:none;font-weight:600}
-    a.button.secondary{background:#111}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Isaac’s Services — Rides • Mobile Notary • Heartbound Journeys (Nashville)</title>
+<meta name="description" content="Isaac’s Services (a Bland Corp company) — reliable rides, mobile notary, and Heartbound Journeys in Nashville. Transparent pricing, professional service, easy booking.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--card:#0b1225;--text:#e5e7eb;--muted:#9ca3af;--brand:#60a5fa;--accent:#34d399}
+*{box-sizing:border-box}html,body{margin:0;height:100%}body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#0b1020,#0f172a);color:var(--text)}
+a{color:var(--brand);text-decoration:none}a:hover{opacity:.9}
+.nav{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 20px}
+.logo{display:flex;gap:10px;align-items:center;font-weight:700}
+.badge{font-size:12px;color:#111;background:var(--accent);padding:2px 8px;border-radius:9999px}
+.btn{display:inline-block;background:var(--brand);color:#111;font-weight:700;padding:12px 16px;border-radius:12px}
+.btn.alt{background:#1f2937;color:#e5e7eb;border:1px solid #334155}
+.hero{max-width:1080px;margin:28px auto;display:grid;gap:24px;grid-template-columns:1.2fr .8fr;padding:0 20px}
+.card{background:rgba(11,18,37,.66);border:1px solid #1f2a4a;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.25);padding:20px}
+h1{font-size: clamp(28px,4vw,40px);margin:8px 0 6px}
+h2{font-size:20px;margin:0 0 12px}
+p{margin:8px 0 14px;color:var(--muted)}
+.grid{display:grid;gap:14px}
+.services{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.footer{max-width:1080px;margin:40px auto 28px;padding:0 20px;color:var(--muted);font-size:14px}
+.kv{display:grid;gap:12px}
+@media (max-width:900px){.hero{grid-template-columns:1fr}}
+.notice{font-size:14px;background:#122042;border:1px dashed #27407e;border-radius:12px;padding:10px;color:#c7d2fe}
+.phone{font-weight:700;color:#fff}
+.small{font-size:12px;color:#9aa5bd}
+</style>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"LocalBusiness",
+  "name":"Isaac’s Services",
+  "legalName":"Isaac’s Services",
+  "brand":{"@type":"Brand","name":"Heartbound Journeys"},
+  "parentOrganization":{"@type":"Organization","name":"Bland Corp"},
+  "image":"https://isaacbland1.github.io/mainwebsite/assets/cover.jpg",
+  "telephone":"+12563455124",
+  "email":"heartboundjourney@gmail.com",
+  "areaServed":"Nashville, TN",
+  "address":{"@type":"PostalAddress","streetAddress":"550 Harding Pl","addressLocality":"Nashville","addressRegion":"TN","postalCode":"37211","addressCountry":"US"},
+  "paymentAccepted":"Cash, Credit Card, PayPal, Payment Apps",
+  "sameAs":["https://maps.google.com","https://github.com/isaacbland1/mainwebsite"]
+}
+</script>
 </head>
 <body>
-  <div class="wrap">
-    <h1>Heartbound Journeys — Services Hub</h1>
-    <p>Call: <a href="tel:+12563455124">(256) 345-5124</a> · Email: <a href="mailto:heartboundjourney@gmail.com">heartboundjourney@gmail.com</a></p>
-
-    <div class="card">
-      <h2>Car Ride Service</h2>
-      <p>Airport & city rides in Nashville. Schedule ahead for smooth arrivals and departures.</p>
-      <p>
-        <a class="button" href="rides-book.html">Book Rides Appointment</a>
-        <a class="button secondary" href="tel:+12563455124">Call Now</a>
-      </p>
+  <header class="nav">
+    <div class="logo">
+      <span>Isaac’s Services</span>
+      <span class="badge">Heartbound Journeys</span>
     </div>
+    <nav class="ctaRow">
+      <a class="btn alt" href="about.html">About</a>
+      <a class="btn" href="rides.html">Rides</a>
+      <a class="btn" href="notary.html">Notary</a>
+      <a class="btn alt" href="heartbound.html">Heartbound Journeys</a>
+    </nav>
+  </header>
 
-    <div class="card">
-      <h2>Mobile Notary</h2>
-      <p>General notarizations, loan signings, and mobile visits (valid ID required).</p>
-      <p>
-        <a class="button" href="notary-book.html">Book Notary Appointment</a>
-        <a class="button secondary" href="mailto:heartboundjourney@gmail.com">Email Us</a>
-      </p>
-    </div>
+  <main class="hero">
+    <section class="card">
+      <h1>Nashville rides, mobile notary, and first-time long-distance meetups — done right</h1>
+      <p><strong>Heartbound Journeys</strong> is the relationship-focused brand under <strong>Isaac’s Services</strong> (a <strong>Bland Corp</strong> company). We specialize in planning and hosting <strong>first-time meetups for long-distance couples in Nashville</strong>—plus dependable city & airport rides and mobile notary services.</p>
+      <div class="ctaRow">
+        <a class="btn" href="rides-book.html">Book a Ride</a>
+        <a class="btn" href="notary-book.html">Book Notary</a>
+        <a class="btn alt" href="heartbound.html">Plan a Heartbound Meetup</a>
+      </div>
+      <div class="notice" style="margin-top:12px">
+        <strong>Pricing at a glance:</strong> Rides — <strong>$35 minimum</strong> + <strong>$1.50/mi</strong> (from 550 Harding Pl). Notary — <strong>$35/stamp</strong>; printing <strong>$5 first page</strong>, <strong>$3/additional</strong>. A <strong>$15 request fee</strong> via PayPal secures your spot and applies toward your total. <span class="small">PayPal is processed under Bland Corp.</span>
+      </div>
+      <div class="kv" style="margin-top:12px">
+        <div>📍 Base: 550 Harding Pl, Nashville, TN 37211</div>
+        <div>📞 <a class="phone" href="tel:+12563455124">(256) 345-5124</a> &nbsp; ✉️ <a href="mailto:heartboundjourney@gmail.com">heartboundjourney@gmail.com</a></div>
+      </div>
+    </section>
 
-    <div class="card">
-      <h2>Heartbound Journeys</h2>
-      <p>Support for long-distance couples: first meets, reunions, weddings, and curated resources.</p>
-      <p>
-        <a class="button" href="#">Explore (coming soon)</a>
-      </p>
-    </div>
-  </div>
+    <aside class="card">
+      <h2>Services at a glance</h2>
+      <div class="grid services">
+        <div>
+          <strong>Airport & City Rides</strong>
+          <p>Transparent, mileage-based pricing. Real-time estimates. Professional, insured driver.</p>
+          <a href="rides.html">Learn more →</a>
+        </div>
+        <div>
+          <strong>Mobile Notary</strong>
+          <p>We come to you. Clear per-stamp pricing and optional printing. (No real-estate signings.)</p>
+          <a href="notary.html">Learn more →</a>
+        </div>
+        <div>
+          <strong>Heartbound Journeys</strong>
+          <p><em>Our specialty:</em> planning first-time long-distance meetups in Nashville — reservations, rides, and guidance.</p>
+          <a href="heartbound.html">Explore →</a>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <div>© <span id="y"></span> Isaac’s Services • A Bland Corp company • Nashville, TN • <a href="about.html">About</a> • <a href="rides.html">Rides</a> • <a href="notary.html">Notary</a> • <a href="heartbound.html">Heartbound Journeys</a></div>
+    <div style="margin-top:6px">All bookings require a $15 request fee via PayPal (under Bland Corp) to secure time. Balance due after service (cash, card, or popular payment apps accepted). Not a real-estate signing agent.</div>
+  </footer>
+<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
 </body>
 </html>
