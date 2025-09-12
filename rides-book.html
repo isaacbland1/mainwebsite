@@ -20,6 +20,8 @@
   table.quote td:last-child{text-align:right}
   .disabled{opacity:.6;pointer-events:none}
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script src="https://unpkg.com/leaflet.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head><body>
   <div class="wrap">
     <p><a href="rides.html">← Back to Rides</a></p>
@@ -118,7 +120,14 @@
         </div>
 
         <p><button id="submitBtn" class="btn disabled" type="submit" disabled>Request Booking</button></p>
-      </form>
+      <label>Pickup Address (for travel estimate)</label><br>
+<input id="rb-address" name="pickup_address" type="text" placeholder="Street, City, ZIP" required style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-bottom:8px;"><br>
+<div id="rb-estimate" style="font-size:.95em;color:#555;margin:6px 0;">Enter address to see travel estimate.</div>
+<input type="hidden" name="travel_estimate" id="rb-travel-hidden">
+<input type="hidden" name="distance_miles" id="rb-dist-mi">
+<input type="hidden" name="duration_minutes" id="rb-dur-min">
+<div id="rb-map" style="height:300px;border:1px solid #e2e8f0;border-radius:12px;margin:10px 0;"></div>
+</form>
     </div>
   </div>
 
@@ -272,4 +281,5 @@ document.getElementById('btnEstimate').addEventListener('click', updateEstimate)
   tryRender();
 })();
 </script>
+<script>(function(){const OSRM_HOST="http://10.0.0.237:5000";const BASE_LAT=36.1627,BASE_LON=-86.7816;const RATE_BASE=25,RATE_PER_MI=1.50;const A=document.getElementById("rb-address"),O=document.getElementById("rb-estimate"),H=document.getElementById("rb-travel-hidden"),MI=document.getElementById("rb-dist-mi"),MN=document.getElementById("rb-dur-min");if(!A)return;const M=L.map("rb-map").setView([BASE_LAT,BASE_LON],12);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap contributors"}).addTo(M);L.marker([BASE_LAT,BASE_LON]).addTo(M).bindPopup("Start (base)");let DM=null,RL=null,T;function D(fn,ms){return(...x)=>{clearTimeout(T);T=setTimeout(()=>fn(...x),ms);};}async function GC(q){const U="https://nominatim.openstreetmap.org/search?format=json&limit=1&q="+encodeURIComponent(q);const R=await fetch(U,{headers:{Accept:"application/json"}});if(!R.ok)throw new Error("geocode");const J=await R.json();if(!J.length)throw new Error("not found");return{lat:parseFloat(J[0].lat),lon:parseFloat(J[0].lon)};}async function RT(lat,lon){const U=OSRM_HOST+"/route/v1/driving/"+BASE_LON+","+BASE_LAT+";"+lon+","+lat+"?overview=full&geometries=geojson";const R=await fetch(U);if(!R.ok)throw new Error("route");const J=await R.json();const X=J&&J.routes&&J.routes[0];if(!X)throw new Error("no route");return X;}function SR(g){if(RL)M.removeLayer(RL);RL=L.geoJSON(g).addTo(M);const B=RL.getBounds();M.fitBounds(B.pad(0.25));}async function EST(){const q=A.value.trim();if(q.length<6){O.textContent="Enter address to see travel estimate.";H.value="";MI.value="";MN.value="";if(RL)M.removeLayer(RL),RL=null;if(DM)M.removeLayer(DM),DM=null;return;}O.textContent="Estimating…";try{const G=await GC(q);if(DM)M.removeLayer(DM);DM=L.marker([G.lat,G.lon]).addTo(M).bindPopup("Pickup");const R=await RT(G.lat,G.lon);const miles=R.distance/1609.344;const mins=Math.round(R.duration/60);const fee=Math.max(0,RATE_BASE+(miles*RATE_PER_MI));SR(R.geometry);const txt="~"+miles.toFixed(1)+" mi • ~"+mins+" min • est travel fee $"+fee.toFixed(2)+" (final by text)";O.textContent=txt;H.value=txt;MI.value=miles.toFixed(2);MN.value=mins;}catch(e){O.textContent="Couldn’t estimate from that address (you can still submit and I’ll confirm by text).";H.value="";MI.value="";MN.value="";}}A.addEventListener("input",D(EST,700));})();</script>
 </body></html>
