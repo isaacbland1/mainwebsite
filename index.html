@@ -3,163 +3,194 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Isaac’s Services — Rides • Mobile Notary • Heartbound Journeys (Nashville)</title>
-<meta name="description" content="Reliable rides, mobile notary, and Heartbound Journeys in Nashville. Transparent pricing, professional service, easy booking.">
+<title>Isaac’s Services — Heartbound Journeys • Rides • Mobile Notary (Nashville)</title>
+<meta name="description" content="Heartbound Journeys: first-time meetings for long-distance relationships, reunions, and weddings. Concierge help for passports, apostille, international marriage paperwork, flights, hotels. Separate rides and mobile notary services available.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="" crossorigin="">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
 :root{--bg:#0f172a;--card:#0b1225;--text:#e5e7eb;--muted:#9ca3af;--brand:#60a5fa;--accent:#34d399;--line:#1f2a4a}
-*{box-sizing:border-box}html,body{margin:0;height:100%}body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#0b1020,#0f172a);color:var(--text)}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#0b1020,#0f172a);color:var(--text)}
 a{color:var(--brand);text-decoration:none}a:hover{opacity:.9}
 .nav{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 20px}
 .logo{display:flex;gap:10px;align-items:center;font-weight:700}
 .badge{font-size:12px;color:#111;background:var(--accent);padding:2px 8px;border-radius:9999px}
+.navlinks{display:flex;gap:16px;align-items:center}
 .btn{display:inline-block;background:var(--brand);color:#111;font-weight:700;padding:12px 16px;border-radius:12px}
 .btn.alt{background:#1f2937;color:#e5e7eb;border:1px solid #334155}
-.hero{max-width:1080px;margin:28px auto;display:grid;gap:24px;grid-template-columns:1.2fr .8fr;padding:0 20px}
+.section{max-width:1080px;margin:28px auto;padding:0 20px}
 .card{background:rgba(11,18,37,.66);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.25);padding:20px}
-.h1{font-size:28px;margin:0 0 8px}
-.p{color:var(--muted);margin:0 0 12px;line-height:1.55}
-.list{margin:0;padding-left:16px;color:var(--muted)}
-.grid{display:grid;gap:16px}
-.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
-.kpi{background:#0b1225;border:1px solid #1f2a4a;border-radius:12px;padding:10px;text-align:center}
-.kpi strong{display:block;font-size:18px}
-.section{max-width:1080px;margin:24px auto;padding:0 20px;display:grid;gap:16px;grid-template-columns:1fr 1fr}
-.section h2{margin:6px 0 0;font-size:20px}
-.footer{max-width:1080px;margin:28px auto 40px;color:#91a0b6;padding:0 20px}
-.mapwrap{height:380px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.input{flex:1;min-width:220px;border-radius:10px;border:1px solid #334155;background:#0b1225;color:var(--text);padding:10px}
-.small{font-size:12px;color:#9ca3af}
-code{background:#101a33;border:1px solid #1f2a4a;border-radius:8px;padding:2px 6px}
-@media (max-width:980px){.hero{grid-template-columns:1fr}.section{grid-template-columns:1fr}}
+.grid{display:grid;gap:24px}
+.hero{grid-template-columns:1.1fr .9fr}
+h1{margin:0 0 8px;font-size:32px;line-height:1.2}
+h2{margin:0 0 8px;font-size:24px}
+p{color:var(--muted);margin:8px 0 0}
+.small{font-size:14px;color:#9ca3af}
+label{font-weight:600;font-size:14px}
+.input{width:100%;padding:12px 14px;border:1px solid #2a3556;background:#0b1225;color:#e5e7eb;border-radius:10px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#map{height:260px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.kpis{display:flex;gap:16px;margin-top:8px}
+.kpi{background:#0b1225;border:1px solid #1f2a4a;border-radius:10px;padding:10px 12px}
+footer{opacity:.7;padding:24px 20px;text-align:center}
+@media (max-width:900px){.hero{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<nav class="nav">
-  <div class="logo">
-    <span>🚗</span>
-    <span>Isaac’s Services</span>
-    <span class="badge">Nashville</span>
-  </div>
-  <div class="row">
-    <!-- TODO: replace with your live booking link -->
-    <a class="btn" href="https://calendly.com/YOUR-BOOKING" target="_blank" rel="noopener">Book Now</a>
-    <a class="btn alt" href="mailto:isaacbland@gmail.com">Email</a>
-  </div>
-</nav>
-
-<section class="hero">
-  <div class="card">
-    <h1 class="h1">Rides • Mobile Notary • Heartbound Journeys</h1>
-    <p class="p">Professional, on-time, and local. Transparent pricing, friendly service, and simple online booking.</p>
-    <ul class="list">
-      <li>🚙 Reliable rides across Greater Nashville</li>
-      <li>🖊️ Mobile notary — I come to you</li>
-      <li>❤️ Heartbound Journeys: compassionate, planned trips</li>
-    </ul>
-    <div class="kpis">
-      <div class="kpi"><strong>7d</strong><span>Availability</span></div>
-      <div class="kpi"><strong>On-time</strong><span>Dependable</span></div>
-      <div class="kpi"><strong>Insured</strong><span>Professional</span></div>
+  <nav class="nav">
+    <div class="logo">
+      <span>Isaac’s Services</span>
+      <span class="badge">Nashville</span>
     </div>
-    <div style="margin-top:14px">
-      <a class="btn" href="https://calendly.com/YOUR-BOOKING" target="_blank" rel="noopener">Book a Ride</a>
-      <a class="btn alt" href="https://heartboundjourney.duckdns.org/health" target="_blank" rel="noopener">System Health</a>
+    <div class="navlinks">
+      <a href="#heartbound">Heartbound Journeys</a>
+      <a href="#rides">Rides</a>
+      <a href="#notary">Mobile Notary</a>
+      <a class="btn alt" href="#contact">Contact</a>
     </div>
-  </div>
+  </nav>
 
-  <div class="card">
-    <div class="mapwrap" id="map"></div>
-    <div class="small" id="mapStatus" style="margin-top:8px">Map ready. Try a sample route or enter coordinates.</div>
-    <div class="row">
-      <input id="from" class="input" placeholder="From: lon,lat  (e.g. -86.7816,36.1627)" value="-86.7816,36.1627">
-      <input id="to"   class="input" placeholder="To:   lon,lat  (e.g. -86.6689,36.1245)" value="-86.6689,36.1245">
-      <button class="btn" id="go">Route</button>
+  <section id="heartbound" class="section grid hero">
+    <div class="card">
+      <h1>Heartbound Journeys</h1>
+      <h2>First-time meetings for long-distance relationships. Reunions. Weddings.</h2>
+      <p>We specialize in those once-in-a-lifetime moments—meeting your person for the first time, bringing family together, or tying the knot. We can help with the hard parts: passport photos, apostille and international marriage paperwork, mailing and tracking documents, flights, hotels, and on-the-ground logistics. We lived the long-distance story—now we make yours easier.</p>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn" href="#journey-form">Plan my journey</a>
+        <a class="btn alt" href="#rides">Need a ride?</a>
+        <a class="btn alt" href="#notary">Mobile notary</a>
+      </div>
     </div>
-  </div>
-</section>
+    <div class="card">
+      <h2 style="margin-bottom:12px">Quick route & estimate</h2>
+      <div class="row" style="margin-bottom:8px">
+        <div>
+          <label for="from">From (address)</label>
+          <input id="from" class="input" placeholder="e.g., BNA Airport, Nashville TN">
+        </div>
+        <div>
+          <label for="to">To (address)</label>
+          <input id="to" class="input" placeholder="e.g., Ryman Auditorium, Nashville TN">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <button id="routeBtn" class="btn">Get route & ETA</button>
+        <span id="status" class="small"></span>
+      </div>
+      <div id="map"></div>
+      <div class="kpis">
+        <div class="kpi"><div class="small">Distance</div><div id="dist">—</div></div>
+        <div class="kpi"><div class="small">ETA</div><div id="eta">—</div></div>
+      </div>
+      <p class="small">Estimates use our own OSRM routing server via OpenStreetMap data.</p>
+    </div>
+  </section>
 
-<section class="section">
-  <div class="card">
-    <h2>Simple Pricing</h2>
-    <p class="p">Up-front quotes. No surprises. Notary travel fees disclosed ahead of time.</p>
-    <ul class="list">
-      <li>Rides — transparent per-mile pricing</li>
-      <li>Mobile Notary — travel + per-stamp</li>
-      <li>Special Journeys — custom itinerary</li>
-    </ul>
-  </div>
-  <div class="card">
+  <section id="journey-form" class="section card">
+    <h2>Start planning</h2>
+    <p>Tell us dates, locations, and any paperwork help you need. We’ll reply with a checklist and options.</p>
+    <p class="small">Prefer texting? See Contact below.</p>
+    <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+      <a class="btn" href="mailto:isaacbland@gmail.com?subject=Heartbound%20Journeys%20Planning">Email us</a>
+      <a class="btn alt" href="sms:+16153397295">Text us</a>
+    </div>
+  </section>
+
+  <section id="rides" class="section card">
+    <h2>Rides (separate service)</h2>
+    <p>Professional, local rides. Transparent pricing. Happy to serve Heartbound Journeys clients for airport transfers and special days.</p>
+    <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+      <a class="btn" href="sms:+16153397295">Book a ride</a>
+      <a class="btn alt" href="#heartbound">Back to Heartbound</a>
+      <a class="btn alt" href="#notary">Need a notary?</a>
+    </div>
+  </section>
+
+  <section id="notary" class="section card">
+    <h2>Mobile Notary</h2>
+    <p>By-appointment mobile notary. We come to you.</p>
+    <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+      <a class="btn" href="sms:+16153397295">Schedule notary</a>
+      <a class="btn alt" href="#rides">Book a ride</a>
+    </div>
+  </section>
+
+  <section id="contact" class="section card">
     <h2>Contact</h2>
-    <p class="p">Call or email with your date, time, and pickup/dropoff details.</p>
-    <p class="p"><strong>Email:</strong> <a href="mailto:isaacbland@gmail.com">isaacbland@gmail.com</a><br>
-    <strong>Site:</strong> <a href="https://isaacbland1.github.io/mainwebsite/">GitHub Pages</a></p>
-  </div>
-</section>
+    <p>Email: <a href="mailto:isaacbland@gmail.com">isaacbland@gmail.com</a> · Text: <a href="sms:+16153397295">+1 (615) 339-7295</a></p>
+  </section>
 
-<footer class="footer small">© <span id="y"></span> Isaac’s Services — Nashville TN</footer>
+  <footer>© <span id="year"></span> Isaac’s Services — Heartbound Journeys • Rides • Mobile Notary</footer>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-document.getElementById('y').textContent = new Date().getFullYear();
+const OSRM_URL = 'https://heartboundjourney.duckdns.org/osrm';
+const statusEl = document.getElementById('status');
+const distEl = document.getElementById('dist');
+const etaEl   = document.getElementById('eta');
+document.getElementById('year').textContent = new Date().getFullYear();
 
-// Map init
-const map = L.map('map').setView([36.1627, -86.7816], 12);
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
-let routeLayer;
+const map = L.map('map');
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:'© OpenStreetMap contributors'
+}).addTo(map);
+let markers = [];
+let routeLayer = null;
+map.setView([36.1627, -86.7816], 11);
 
-// OSRM proxy base (your nginx on stronger)
-const OSRM_BASE = 'https://heartboundjourney.duckdns.org/osrm';
-
-async function checkHealth() {
-  try {
-    const res = await fetch('https://heartboundjourney.duckdns.org/health', {cache:'no-store'});
-    const txt = await res.text();
-    if (!res.ok || !/ok/i.test(txt)) throw new Error('not ok');
-    document.getElementById('mapStatus').textContent = 'OSRM ready. Enter lon,lat and click Route.';
-  } catch(e) {
-    document.getElementById('mapStatus').innerHTML =
-      'OSRM is not reachable right now. You can still use the booking button. ' +
-      'If you are remote, make sure port 443 is forwarded to stronger, or connect via WireGuard.';
-  }
-}
-checkHealth();
-
-function parseLonLat(s) {
-  const parts = s.split(',').map(v => parseFloat(v.trim()));
-  if (parts.length !== 2 || parts.some(Number.isNaN)) return null;
-  return {lon: parts[0], lat: parts[1]};
+async function geocode(q){
+  const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q);
+  const r = await fetch(url, {headers:{'Accept':'application/json'}});
+  if(!r.ok) throw new Error('Geocoding failed');
+  const data = await r.json();
+  if(!data.length) throw new Error('No results for "'+q+'"');
+  return {lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), label: data[0].display_name};
 }
 
-async function route() {
-  const from = parseLonLat(document.getElementById('from').value);
-  const to   = parseLonLat(document.getElementById('to').value);
-  if (!from || !to) {
-    alert('Use lon,lat format like: -86.7816,36.1627');
-    return;
-  }
-  const url = `${OSRM_BASE}/route/v1/driving/${from.lon},${from.lat};${to.lon},${to.lat}?overview=full&geometries=geojson`;
-  const status = document.getElementById('mapStatus');
-  status.textContent = 'Routing...';
-  try {
-    const res = await fetch(url, {cache: 'no-store'});
-    const data = await res.json();
-    if (data.code !== 'Ok') throw new Error(data.code || 'OSRM error');
-    const geom = data.routes[0].geometry;
-    const line = L.geoJSON(geom);
-    if (routeLayer) map.removeLayer(routeLayer);
-    routeLayer = line.addTo(map);
-    map.fitBounds(line.getBounds(), {padding:[20,20]});
-    status.textContent = `Distance ${(data.routes[0].distance/1000).toFixed(1)} km — Duration ${(data.routes[0].duration/60).toFixed(0)} min`;
-  } catch (e) {
-    status.innerHTML = 'Routing failed. If remote, verify your DuckDNS points to your WAN and port 443 is forwarded to stronger.';
+function fmtKm(m){ return (m/1000).toFixed(1) + ' km'; }
+function fmtMin(s){ return Math.round(s/60) + ' min'; }
+
+function clearMap(){
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+  if(routeLayer){ map.removeLayer(routeLayer); routeLayer = null; }
+}
+
+async function route(){
+  try{
+    statusEl.textContent = 'Geocoding...';
+    clearMap();
+    const fromQ = document.getElementById('from').value.trim();
+    const toQ   = document.getElementById('to').value.trim();
+    if(!fromQ || !toQ){ statusEl.textContent='Enter both addresses.'; return; }
+    const [A,B] = await Promise.all([geocode(fromQ), geocode(toQ)]);
+    const a = L.marker([A.lat, A.lon]).addTo(map).bindPopup('From: ' + A.label);
+    const b = L.marker([B.lat, B.lon]).addTo(map).bindPopup('To: ' + B.label);
+    markers.push(a,b);
+    map.fitBounds(L.latLngBounds([ [A.lat,A.lon],[B.lat,B.lon] ]), {padding:[30,30]});
+
+    statusEl.textContent = 'Routing...';
+    const url = `${OSRM_URL}/route/v1/driving/${A.lon},${A.lat};${B.lon},${B.lat}?overview=full&geometries=geojson`;
+    const r = await fetch(url);
+    if(!r.ok) throw new Error('OSRM error');
+    const j = await r.json();
+    if(j.code!=='Ok' || !j.routes?.length) throw new Error('No route found');
+
+    const route = j.routes[0];
+    distEl.textContent = fmtKm(route.distance);
+    etaEl.textContent  = fmtMin(route.duration);
+
+    routeLayer = L.geoJSON(route.geometry, {weight:6, opacity:0.8}).addTo(map);
+    statusEl.textContent = 'Done';
+  }catch(e){
+    statusEl.textContent = e.message || 'Error';
+    distEl.textContent = '—';
+    etaEl.textContent  = '—';
   }
 }
-document.getElementById('go').addEventListener('click', route);
+
+document.getElementById('routeBtn').addEventListener('click', route);
 </script>
 </body>
 </html>
