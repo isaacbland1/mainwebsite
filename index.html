@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Isaac’s Services — Rides • Mobile Notary • Heartbound Journeys (Nashville)</title>
-<meta name="description" content="Isaac’s Services (a Bland Corp company) — reliable rides, mobile notary, and Heartbound Journeys in Nashville. Transparent pricing, professional service, easy booking.">
+<meta name="description" content="Reliable rides, mobile notary, and Heartbound Journeys in Nashville. Transparent pricing, professional service, easy booking.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="" crossorigin="">
 <style>
 :root{--bg:#0f172a;--card:#0b1225;--text:#e5e7eb;--muted:#9ca3af;--brand:#60a5fa;--accent:#34d399;--line:#1f2a4a}
 *{box-sizing:border-box}html,body{margin:0;height:100%}body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#0b1020,#0f172a);color:var(--text)}
@@ -18,138 +19,147 @@ a{color:var(--brand);text-decoration:none}a:hover{opacity:.9}
 .btn.alt{background:#1f2937;color:#e5e7eb;border:1px solid #334155}
 .hero{max-width:1080px;margin:28px auto;display:grid;gap:24px;grid-template-columns:1.2fr .8fr;padding:0 20px}
 .card{background:rgba(11,18,37,.66);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.25);padding:20px}
-h1{font-size: clamp(28px,4vw,40px);margin:8px 0 6px}
-h2{font-size:20px;margin:0 0 12px}
-p{margin:8px 0 14px;color:var(--muted)}
-.grid{display:grid;gap:14px}
-.services{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-.ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
-.footer{max-width:1080px;margin:40px auto 28px;padding:0 20px;color:var(--muted);font-size:14px}
-.kv{display:grid;gap:12px}
-@media (max-width:900px){.hero{grid-template-columns:1fr}}
-.notice{font-size:14px;background:#122042;border:1px dashed #27407e;border-radius:12px;padding:10px;color:#c7d2fe}
-.phone{font-weight:700;color:#fff}
-.small{font-size:12px;color:#9aa5bd}
-.table{width:100%;border-collapse:collapse}
-.table th,.table td{padding:10px;border-bottom:1px solid var(--line);text-align:left}
-.table th{color:#cbd5e1}
-.faq dt{font-weight:700;margin-top:10px}
-.faq dd{margin:6px 0 12px;color:var(--muted)}
-.section{max-width:1080px;margin:18px auto 0;padding:0 20px;display:grid;gap:18px;grid-template-columns:1fr 1fr}
-@media (max-width:900px){.section{grid-template-columns:1fr}}
+.h1{font-size:28px;margin:0 0 8px}
+.p{color:var(--muted);margin:0 0 12px;line-height:1.55}
+.list{margin:0;padding-left:16px;color:var(--muted)}
+.grid{display:grid;gap:16px}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.kpi{background:#0b1225;border:1px solid #1f2a4a;border-radius:12px;padding:10px;text-align:center}
+.kpi strong{display:block;font-size:18px}
+.section{max-width:1080px;margin:24px auto;padding:0 20px;display:grid;gap:16px;grid-template-columns:1fr 1fr}
+.section h2{margin:6px 0 0;font-size:20px}
+.footer{max-width:1080px;margin:28px auto 40px;color:#91a0b6;padding:0 20px}
+.mapwrap{height:380px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.input{flex:1;min-width:220px;border-radius:10px;border:1px solid #334155;background:#0b1225;color:var(--text);padding:10px}
+.small{font-size:12px;color:#9ca3af}
+code{background:#101a33;border:1px solid #1f2a4a;border-radius:8px;padding:2px 6px}
+@media (max-width:980px){.hero{grid-template-columns:1fr}.section{grid-template-columns:1fr}}
 </style>
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"LocalBusiness",
-  "name":"Isaac’s Services",
-  "legalName":"Isaac’s Services",
-  "brand":{"@type":"Brand","name":"Heartbound Journeys"},
-  "parentOrganization":{"@type":"Organization","name":"Bland Corp"},
-  "image":"https://isaacbland1.github.io/mainwebsite/assets/cover.jpg",
-  "telephone":"+12563455124",
-  "email":"heartboundjourney@gmail.com",
-  "areaServed":"Nashville, TN",
-  "address":{"@type":"PostalAddress","streetAddress":"550 Harding Pl","addressLocality":"Nashville","addressRegion":"TN","postalCode":"37211","addressCountry":"US"},
-  "paymentAccepted":"Cash, Credit Card, PayPal, Payment Apps",
-  "sameAs":["https://maps.google.com","https://github.com/isaacbland1/mainwebsite"]
-}
-</script>
 </head>
 <body>
-  <header class="nav">
-    <div class="logo">
-      <span>Isaac’s Services</span>
-      <span class="badge">Heartbound Journeys</span>
+
+<nav class="nav">
+  <div class="logo">
+    <span>🚗</span>
+    <span>Isaac’s Services</span>
+    <span class="badge">Nashville</span>
+  </div>
+  <div class="row">
+    <!-- TODO: replace with your live booking link -->
+    <a class="btn" href="https://calendly.com/YOUR-BOOKING" target="_blank" rel="noopener">Book Now</a>
+    <a class="btn alt" href="mailto:isaacbland@gmail.com">Email</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="card">
+    <h1 class="h1">Rides • Mobile Notary • Heartbound Journeys</h1>
+    <p class="p">Professional, on-time, and local. Transparent pricing, friendly service, and simple online booking.</p>
+    <ul class="list">
+      <li>🚙 Reliable rides across Greater Nashville</li>
+      <li>🖊️ Mobile notary — I come to you</li>
+      <li>❤️ Heartbound Journeys: compassionate, planned trips</li>
+    </ul>
+    <div class="kpis">
+      <div class="kpi"><strong>7d</strong><span>Availability</span></div>
+      <div class="kpi"><strong>On-time</strong><span>Dependable</span></div>
+      <div class="kpi"><strong>Insured</strong><span>Professional</span></div>
     </div>
-    <nav class="ctaRow">
-      <a class="btn alt" href="about.html">About</a>
-      <a class="btn" href="rides.html">Rides</a>
-      <a class="btn" href="notary.html">Notary</a>
-      <a class="btn alt" href="heartbound.html">Heartbound Journeys</a>
-    </nav>
-  </header>
-<section style="max-width:900px;margin:2rem auto;padding:1rem;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));"><a href="rides.html" style="text-decoration:none;padding:14px;border:1px solid #ddd;border-radius:12px;display:block;text-align:center">🚗 Rides — Book & Pricing</a><a href="notary.html" style="text-decoration:none;padding:14px;border:1px solid #ddd;border-radius:12px;display:block;text-align:center">🖋️ Mobile Notary — Book & Pricing</a><a href="heartbound.html" style="text-decoration:none;padding:14px;border:1px solid #ddd;border-radius:12px;display:block;text-align:center">💞 Heartbound Journeys — Services</a></section>
-<section style="max-width:900px;margin:2rem auto;padding:1rem;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));"><a href="rides.html" style="text-decoration:none;padding:14px;border:1px solid #ddd;border-radius:12px;display:block;text-align:center">🚗 Rides — Book & Pricing</a><a href="notary.html" style="text-decoration:none;padding:14px;border:1px solid #ddd;border-radius:12px;display:block;text-align:center">🖋️ Mobile Notary — Book & Pricing</a><a href="heartbound.html" style="text-decoration:none;padding:14px;border:1px solid #ddd;border-radius:12px;display:block;text-align:center">💞 Heartbound Journeys — Services</a></section>
-
-  <main class="hero">
-    <section class="card">
-      <h1>Nashville rides, mobile notary, and first-time long-distance meetups — done right</h1>
-      <p><strong>Heartbound Journeys</strong> is the relationship-focused brand under <strong>Isaac’s Services</strong> (a <strong>Bland Corp</strong> company). We specialize in planning and hosting <strong>first-time meetups for long-distance couples in Nashville</strong>—plus dependable city & airport rides and mobile notary services.</p>
-      <div class="ctaRow">
-        <a class="btn" href="rides-book.html">Book a Ride</a>
-        <a class="btn" href="notary-book.html">Book Notary</a>
-        <a class="btn alt" href="heartbound.html">Plan a Heartbound Meetup</a>
-      </div>
-      <div class="notice" style="margin-top:12px">
-        <strong>Pricing at a glance:</strong> Rides — <strong>$35 minimum</strong> + <strong>$1.50/mi</strong> (from 550 Harding Pl). Notary — <strong>$35/stamp</strong>; printing <strong>$5 first page</strong>, <strong>$3/additional</strong>. A <strong>$15 request fee</strong> via PayPal secures your spot and applies toward your total. <span class="small">PayPal is processed under Bland Corp.</span>
-      </div>
-      <div class="kv" style="margin-top:12px">
-        <div>📍 Base: 550 Harding Pl, Nashville, TN 37211</div>
-        <div>📞 <a class="phone" href="tel:+12563455124">(256) 345-5124</a> &nbsp; ✉️ <a href="mailto:heartboundjourney@gmail.com">heartboundjourney@gmail.com</a></div>
-      </div>
-    </section>
-
-    <aside class="card">
-      <h2>Services at a glance</h2>
-      <div class="grid services">
-        <div>
-          <strong>Airport & City Rides</strong>
-          <p>Transparent, mileage-based pricing. Real-time estimates. Professional, insured driver.</p>
-          <a href="rides.html">Learn more →</a>
-        </div>
-        <div>
-          <strong>Mobile Notary</strong>
-          <p>We come to you. Clear per-stamp pricing and optional printing. (No real-estate signings.)</p>
-          <a href="notary.html">Learn more →</a>
-        </div>
-        <div>
-          <strong>Heartbound Journeys</strong>
-          <p><em>Our specialty:</em> planning first-time long-distance meetups in Nashville — reservations, rides, and guidance.</p>
-          <a href="heartbound.html">Explore →</a>
-        </div>
-      </div>
-    </aside>
-  </main>
-
-  <section class="section">
-    <div class="card">
-      <h2>Compare costs in Nashville</h2>
-      <table class="table">
-        <tr><th>Service</th><th>Typical Cost</th><th>Notes</th></tr>
-        <tr><td>Isaac’s Services</td><td>$35 min + $1.50/mi</td><td>Transparent estimate before booking; professional, insured driver</td></tr>
-        <tr><td>Airport taxi</td><td>~$30 flat + $2 per extra passenger</td><td>May add surcharges; pricing varies by zone</td></tr>
-        <tr><td>Shared shuttle</td><td>$35–$65</td><td>Price varies by group size and timing</td></tr>
-        <tr><td>Black car/premium</td><td>$65+</td><td>Premium tier pricing</td></tr>
-      </table>
-      <p style="margin-top:10px">Result: most trips come out <strong>20–40% less</strong> than premium options while keeping a professional experience.</p>
+    <div style="margin-top:14px">
+      <a class="btn" href="https://calendly.com/YOUR-BOOKING" target="_blank" rel="noopener">Book a Ride</a>
+      <a class="btn alt" href="https://heartboundjourney.duckdns.org/health" target="_blank" rel="noopener">System Health</a>
     </div>
+  </div>
 
-    <div class="card">
-      <h2>FAQ</h2>
-      <dl class="faq">
-        <dt>Do I have to pay the $15 request fee?</dt>
-        <dd>Yes. It secures your timeslot and is applied to your total. It’s processed via PayPal under Bland Corp.</dd>
-
-        <dt>How do you calculate ride costs?</dt>
-        <dd>We estimate miles and time in real-time from 550 Harding Pl using our local routing engine. Final total respects the $35 minimum + $1.50/mi.</dd>
-
-        <dt>What payments do you accept?</dt>
-        <dd>Cash, card, PayPal, and popular payment apps. The request fee is paid online via PayPal.</dd>
-
-        <dt>Do you handle notary real estate signings?</dt>
-        <dd>No. We are not a real-estate signing agent. General notary work only.</dd>
-
-        <dt>Can you help plan first-time long-distance meetups?</dt>
-        <dd>Yes. That’s our Heartbound Journeys specialty—rides, hotel transfers, and reservations at romantic Nashville spots. Optional photo/video add-ons are available via local freelancers you pay directly.</dd>
-      </dl>
+  <div class="card">
+    <div class="mapwrap" id="map"></div>
+    <div class="small" id="mapStatus" style="margin-top:8px">Map ready. Try a sample route or enter coordinates.</div>
+    <div class="row">
+      <input id="from" class="input" placeholder="From: lon,lat  (e.g. -86.7816,36.1627)" value="-86.7816,36.1627">
+      <input id="to"   class="input" placeholder="To:   lon,lat  (e.g. -86.6689,36.1245)" value="-86.6689,36.1245">
+      <button class="btn" id="go">Route</button>
     </div>
-  </section>
+  </div>
+</section>
 
-  <footer class="footer">
-    <div>© <span id="y"></span> Isaac’s Services • A Bland Corp company • Nashville, TN • <a href="about.html">About</a> • <a href="rides.html">Rides</a> • <a href="notary.html">Notary</a> • <a href="heartbound.html">Heartbound Journeys</a></div>
-    <div style="margin-top:6px">All bookings require a $15 request fee via PayPal (under Bland Corp) to secure time. Balance due after service (cash, card, or popular payment apps accepted). Not a real-estate signing agent.</div>
-  </footer>
-<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+<section class="section">
+  <div class="card">
+    <h2>Simple Pricing</h2>
+    <p class="p">Up-front quotes. No surprises. Notary travel fees disclosed ahead of time.</p>
+    <ul class="list">
+      <li>Rides — transparent per-mile pricing</li>
+      <li>Mobile Notary — travel + per-stamp</li>
+      <li>Special Journeys — custom itinerary</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>Contact</h2>
+    <p class="p">Call or email with your date, time, and pickup/dropoff details.</p>
+    <p class="p"><strong>Email:</strong> <a href="mailto:isaacbland@gmail.com">isaacbland@gmail.com</a><br>
+    <strong>Site:</strong> <a href="https://isaacbland1.github.io/mainwebsite/">GitHub Pages</a></p>
+  </div>
+</section>
+
+<footer class="footer small">© <span id="y"></span> Isaac’s Services — Nashville TN</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="" crossorigin=""></script>
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+
+// Map init
+const map = L.map('map').setView([36.1627, -86.7816], 12);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
+let routeLayer;
+
+// OSRM proxy base (your nginx on stronger)
+const OSRM_BASE = 'https://heartboundjourney.duckdns.org/osrm';
+
+async function checkHealth() {
+  try {
+    const res = await fetch('https://heartboundjourney.duckdns.org/health', {cache:'no-store'});
+    const txt = await res.text();
+    if (!res.ok || !/ok/i.test(txt)) throw new Error('not ok');
+    document.getElementById('mapStatus').textContent = 'OSRM ready. Enter lon,lat and click Route.';
+  } catch(e) {
+    document.getElementById('mapStatus').innerHTML =
+      'OSRM is not reachable right now. You can still use the booking button. ' +
+      'If you are remote, make sure port 443 is forwarded to stronger, or connect via WireGuard.';
+  }
+}
+checkHealth();
+
+function parseLonLat(s) {
+  const parts = s.split(',').map(v => parseFloat(v.trim()));
+  if (parts.length !== 2 || parts.some(Number.isNaN)) return null;
+  return {lon: parts[0], lat: parts[1]};
+}
+
+async function route() {
+  const from = parseLonLat(document.getElementById('from').value);
+  const to   = parseLonLat(document.getElementById('to').value);
+  if (!from || !to) {
+    alert('Use lon,lat format like: -86.7816,36.1627');
+    return;
+  }
+  const url = `${OSRM_BASE}/route/v1/driving/${from.lon},${from.lat};${to.lon},${to.lat}?overview=full&geometries=geojson`;
+  const status = document.getElementById('mapStatus');
+  status.textContent = 'Routing...';
+  try {
+    const res = await fetch(url, {cache: 'no-store'});
+    const data = await res.json();
+    if (data.code !== 'Ok') throw new Error(data.code || 'OSRM error');
+    const geom = data.routes[0].geometry;
+    const line = L.geoJSON(geom);
+    if (routeLayer) map.removeLayer(routeLayer);
+    routeLayer = line.addTo(map);
+    map.fitBounds(line.getBounds(), {padding:[20,20]});
+    status.textContent = `Distance ${(data.routes[0].distance/1000).toFixed(1)} km — Duration ${(data.routes[0].duration/60).toFixed(0)} min`;
+  } catch (e) {
+    status.innerHTML = 'Routing failed. If remote, verify your DuckDNS points to your WAN and port 443 is forwarded to stronger.';
+  }
+}
+document.getElementById('go').addEventListener('click', route);
+</script>
 </body>
 </html>
